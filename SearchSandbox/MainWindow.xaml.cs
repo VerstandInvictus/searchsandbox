@@ -11,6 +11,7 @@ namespace SearchSandbox
         public MainWindow()
         {
             InitializeComponent();
+            Application.Current.Properties["CharacterArrays"] = 
         }
 
         private void DirectoryButton_Click(object sender, RoutedEventArgs e)
@@ -19,8 +20,8 @@ namespace SearchSandbox
             var dialogResult = dialog.ShowDialog();
             DirectoryButton.Visibility = Visibility.Collapsed;
             Application.Current.Properties["DirectoryList"] = System.IO.Directory.GetFiles(dialog.SelectedPath);
-            string result = string.Join(", ", (string[])Application.Current.Properties["DirectoryList"]);
-            MessageBox.Show(result);
         }
+
+        private string[] SplitLetters
     }
 }
