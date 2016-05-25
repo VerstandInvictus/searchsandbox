@@ -13,5 +13,12 @@ namespace SearchSandbox
     /// </summary>
     public partial class App : Application
     {
+
+        private void AppStartup(object sender, StartupEventArgs e)
+        {
+            MainWindow wnd = new SearchSandbox.MainWindow();
+            wnd.Show();
+        }
+       
     }
 }

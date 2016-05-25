@@ -21,5 +21,7 @@
         </Grid.RowDefinitions>
         <TextBox x:Name="SearchBox" Height="23" Margin="10,9,10,0" TextWrapping="Wrap" VerticalAlignment="Center" Background="#FF494646" Grid.ColumnSpan="2" Foreground="#FFE8E8E8"/>
         <Button x:Name="DirectoryButton" Content="Open Directory..." HorizontalAlignment="Center" Margin="0" Grid.Row="1" VerticalAlignment="Center" Width="208" IsDefault="True" Click="DirectoryButton_Click"/>
+        <DataGrid x:Name="ResultsDataGrid" AutoGenerateColumns="False" HorizontalAlignment="Left" Height="263" Margin="10,5,0,0" Grid.Row="1" VerticalAlignment="Top" Width="487" Background="Gray" Visibility="Collapsed">
+        </DataGrid>
     </Grid>
 </Window>

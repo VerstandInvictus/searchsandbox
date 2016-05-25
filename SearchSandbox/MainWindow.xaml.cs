@@ -1,5 +1,8 @@
 ﻿using System;
-using System.Windows;   
+using System.Windows;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Collections.Generic;
 
 namespace SearchSandbox
 {
@@ -11,7 +14,16 @@ namespace SearchSandbox
         public MainWindow()
         {
             InitializeComponent();
-            Application.Current.Properties["CharacterArrays"] = 
+        }
+        
+        private List<string> FilenameListFromFileInfo(FileInfo[] FileInfo)
+        {
+            List<string> FilenameList = new List<string>();
+            foreach (var file in FileInfo)
+            {
+                FilenameList.Add(file.Name);
+            }
+            return FilenameList;
         }
 
         private void DirectoryButton_Click(object sender, RoutedEventArgs e)
@@ -19,9 +31,22 @@ namespace SearchSandbox
             var dialog = new System.Windows.Forms.FolderBrowserDialog();
             var dialogResult = dialog.ShowDialog();
             DirectoryButton.Visibility = Visibility.Collapsed;
-            Application.Current.Properties["DirectoryList"] = System.IO.Directory.GetFiles(dialog.SelectedPath);
+            ResultsDataGrid.Visibility = Visibility.Visible;
+            var dinfo = new DirectoryInfo(dialog.SelectedPath);
+            Application.Current.Resources["DirectoryList"] = dinfo.GetFiles();
+            MessageBox.Show
+            (
+                string.Join
+                (
+                    ",",
+                    FilenameListFromFileInfo((FileInfo[])Application.Current.Resources["DirectoryList"])
+                )
+            );
         }
+        
+        private void FillDataList(object FileList)
+        {
 
-        private string[] SplitLetters
+        }
     }
 }
