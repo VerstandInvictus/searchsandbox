@@ -16,12 +16,12 @@ namespace SearchSandbox
             InitializeComponent();
         }
         
-        private List<string> FilenameListFromFileInfo(FileInfo[] FileInfo)
+        private List<string> StringListFromFileInfo(FileInfo[] FileInfo, string Property)
         {
             List<string> FilenameList = new List<string>();
             foreach (var file in FileInfo)
             {
-                FilenameList.Add(file.Name);
+                FilenameList.Add((string)file.GetType().GetProperty(Property).GetValue(file));
             }
             return FilenameList;
         }
@@ -39,7 +39,7 @@ namespace SearchSandbox
                 string.Join
                 (
                     ",",
-                    FilenameListFromFileInfo((FileInfo[])Application.Current.Resources["DirectoryList"])
+                    StringListFromFileInfo((FileInfo[])Application.Current.Resources["DirectoryList"], "Name")
                 )
             );
         }
