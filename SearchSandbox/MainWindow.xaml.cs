@@ -3,6 +3,9 @@ using System.Windows;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Collections.Generic;
+using System.Windows.Controls;
+using System.Data;
+using ByteSizeLib;
 
 namespace SearchSandbox
 {
@@ -18,12 +21,12 @@ namespace SearchSandbox
         
         private List<string> StringListFromFileInfo(FileInfo[] FileInfo, string Property)
         {
-            List<string> FilenameList = new List<string>();
+            List<string> PropList = new List<string>();
             foreach (var file in FileInfo)
             {
-                FilenameList.Add((string)file.GetType().GetProperty(Property).GetValue(file));
+                PropList.Add((string)file.GetType().GetProperty(Property).GetValue(file));
             }
-            return FilenameList;
+            return PropList;
         }
 
         private void DirectoryButton_Click(object sender, RoutedEventArgs e)
@@ -34,19 +37,36 @@ namespace SearchSandbox
             ResultsDataGrid.Visibility = Visibility.Visible;
             var dinfo = new DirectoryInfo(dialog.SelectedPath);
             Application.Current.Resources["DirectoryList"] = dinfo.GetFiles();
-            MessageBox.Show
-            (
-                string.Join
-                (
-                    ",",
-                    StringListFromFileInfo((FileInfo[])Application.Current.Resources["DirectoryList"], "Name")
-                )
-            );
+            FillDataList((FileInfo[])Application.Current.Resources["DirectoryList"], this.ResultsDataGrid);
         }
         
-        private void FillDataList(object FileList)
+        private void FillDataList(FileInfo[] FileList, DataGrid DataGrid)
         {
-
+            DataTable FileData = new DataTable();
+            FileData.Columns.Add("Filename");
+            FileData.Columns.Add("File Path");
+            FileData.Columns.Add("File Size");
+            FileData.Columns.Add("Byte Size");
+            foreach (var file in FileList)
+            {
+                var dr = FileData.NewRow();
+                dr["Filename"] = file.Name;
+                dr["File Path"] = file.Directory.FullName;
+                var flbytes = new ByteSize(file.Length);
+                dr["File Size"] = flbytes.ToString();
+                dr["Byte Size"] = flbytes.KiloBytes;
+                FileData.Rows.Add(dr);
+            }
+            DataGrid.DataContext = FileData.DefaultView;
+            DataGrid.ItemsSource = FileData.DefaultView;
+            foreach (DataGridColumn col in DataGrid.Columns)
+            {
+                if ((string)col.Header == "File Size")
+                {
+                    col.CanUserSort = false;
+                }
+            }
+            DataGrid.Items.Refresh();
         }
     }
 }
